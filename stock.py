@@ -66,7 +66,8 @@ candidate_stocks = [
 
 # 2. 您已買入權證所對應的「現股代碼」（監控現股是否跌破 5 日線）
 # 例如：買了台積電與奇鋐的權證，請填入 ["2330.TW", "3017.TW"]
-my_portfolio = ["4919.TW","3042.TW","3357.TW"]"00685L.TW"
+my_portfolio = ["4919.TW","3042.TW","3357.TW","00685L.TW"]
+
 
 
 def get_warrant_eligible_stocks():
