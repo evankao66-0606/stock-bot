@@ -204,4 +204,3 @@ def run_warrant_radar():
 
 if __name__ == "__main__":
     run_warrant_radar()
-
