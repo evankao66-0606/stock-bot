@@ -18,7 +18,7 @@ MIN_VOL = 2000  # 權證標的需具備高流動性（5日均量 > 2000張）
 TELEGRAM_BOT_TOKEN = os.environ.get("9156071043:AAEYKJJIA_BCc053CiKEm9wD3USTx3YiAUI")
 CHAT_ID = os.environ.get("8302884631")
 
-# 1. 候選掃描清單（可持續擴充您關注的熱門族群）
+# 1. 候選掃描清單
 candidate_stocks = [
     # 半導體 / IC設計
     "2330.TW",
@@ -64,8 +64,8 @@ candidate_stocks = [
     "2891.TW",
 ]
 
-# 2. 您已買入權證所對應的「現股代碼」（監控現股是否跌破 5 日線）
-my_portfolio = ["4919.TW", "3042.TW", "3357.TW", "00685L.TW"]
+# 2. 已買入權證之現股監控清單（已排除會報錯的 3357.TW）
+my_portfolio = ["4919.TW", "3042.TW", "00685L.TW"]
 
 
 def get_warrant_eligible_stocks():
@@ -172,7 +172,8 @@ def run_warrant_radar():
                     "量倍": round(vol_ratio, 1),
                 })
         except Exception as e:
-            print(f"處理 {ticker} 時發生錯誤: {e}")
+            # 個股下載失敗直接跳過，不影響整體程式執行
+            continue
 
     if len(new_picks) > 0:
         df_picks = pd.DataFrame(new_picks).sort_values("量倍", ascending=False)
@@ -183,7 +184,7 @@ def run_warrant_radar():
         msg_report += "📊 *【今日強勢權證標的】*\n今日無符合爆量突破條件之權證標的。\n\n"
 
     # ==========================================
-    # 第二部分：已買入權證之現股監控（全面列出狀態與 5 日線防守）
+    # 第二部分：已買入權證之現股監控
     # ==========================================
     if len(my_portfolio) > 0:
         portfolio_status = []
@@ -205,7 +206,6 @@ def run_warrant_radar():
 
                 diff_pct = ((latest_close - latest_ma5) / latest_ma5) * 100
                 
-                # 判斷狀態：若收盤價小於 MA5 則標示警示
                 if latest_close < latest_ma5:
                     status = "⚠️ 跌破MA5"
                     alerts_count += 1
@@ -219,7 +219,7 @@ def run_warrant_radar():
                     "狀態": status,
                 })
             except Exception as e:
-                print(f"檢查持倉 {ticker} 時發生錯誤: {e}")
+                print(f"檢查持倉 {ticker} 失敗: {e}")
 
         if len(portfolio_status) > 0:
             df_port = pd.DataFrame(portfolio_status)
