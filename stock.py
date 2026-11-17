@@ -8,11 +8,11 @@ import yfinance as yf
 # 權證專屬參數設定
 # ----------------------------
 N_HIGH = 20  # 創 20 日新高
-VOL_MULT = 2.0  # 權證講求爆發力，量能倍數調高至 2.0 倍
-RSI_LOW = 55  # 動能轉強區間下限
-RSI_HIGH = 80  # 避免過度追高
+VOL_MULT = 2.0  # 權證爆發力，量能倍數 2.0 倍
+RSI_LOW = 55
+RSI_HIGH = 80
 MA_PERIOD = 20
-MIN_VOL = 2000  # 權證標的需具備高流動性（5日均量 > 2000張）
+MIN_VOL = 2000  # 5日均量 > 2000張
 
 # 從 GitHub Secrets 讀取 Telegram 憑證
 TELEGRAM_BOT_TOKEN = os.environ.get("9156071043:AAEYKJJIA_BCc053CiKEm9wD3USTx3YiAUI")
@@ -21,50 +21,21 @@ CHAT_ID = os.environ.get("8302884631")
 # 1. 候選掃描清單
 candidate_stocks = [
     # 半導體 / IC設計
-    "2330.TW",
-    "2303.TW",
-    "2454.TW",
-    "3711.TW",
-    "2379.TW",
-    "3034.TW",
-    "2408.TW",
-    "3443.TW",
-    "3661.TW",
+    "2330.TW", "2303.TW", "2454.TW", "3711.TW", "2379.TW",
+    "3034.TW", "2408.TW", "3443.TW", "3661.TW",
     # AI 伺服器 / 電子代工
-    "2382.TW",
-    "3231.TW",
-    "2356.TW",
-    "6669.TW",
-    "2317.TW",
-    "2308.TW",
-    "3017.TW",
-    "4938.TW",
-    "2357.TW",
-    "2376.TW",
+    "2382.TW", "3231.TW", "2356.TW", "6669.TW", "2317.TW",
+    "2308.TW", "3017.TW", "4938.TW", "2357.TW", "2376.TW",
     # 散熱 / PCB / 光電 / 零組件
-    "3324.TW",
-    "3037.TW",
-    "2368.TW",
-    "3008.TW",
-    "3406.TW",
-    "2327.TW",
-    "2345.TW",
+    "3324.TW", "3037.TW", "2368.TW", "3008.TW", "3406.TW",
+    "2327.TW", "2345.TW",
     # 航運 / 重電 / 金融 / 傳產權值
-    "2603.TW",
-    "2609.TW",
-    "2615.TW",
-    "2618.TW",
-    "1519.TW",
-    "1513.TW",
-    "1504.TW",
-    "1605.TW",
-    "2002.TW",
-    "2881.TW",
-    "2882.TW",
-    "2891.TW",
+    "2603.TW", "2609.TW", "2615.TW", "2618.TW",
+    "1519.TW", "1513.TW", "1504.TW", "1605.TW", "2002.TW",
+    "2881.TW", "2882.TW", "2891.TW",
 ]
 
-# 2. 已買入權證之現股監控清單（已排除會報錯的 3357.TW）
+# 2. 已買入權證之現股監控清單（已排除 3357.TW）
 my_portfolio = ["4919.TW", "3042.TW", "00685L.TW"]
 
 
@@ -171,8 +142,7 @@ def run_warrant_radar():
                     "漲幅%": round(change, 1),
                     "量倍": round(vol_ratio, 1),
                 })
-        except Exception as e:
-            # 個股下載失敗直接跳過，不影響整體程式執行
+        except Exception:
             continue
 
     if len(new_picks) > 0:
@@ -184,7 +154,7 @@ def run_warrant_radar():
         msg_report += "📊 *【今日強勢權證標的】*\n今日無符合爆量突破條件之權證標的。\n\n"
 
     # ==========================================
-    # 第二部分：已買入權證之現股監控
+    # 第二部分：已買入權證之現股監控 (MA5)
     # ==========================================
     if len(my_portfolio) > 0:
         portfolio_status = []
@@ -204,8 +174,6 @@ def run_warrant_radar():
                 latest_close = close.iloc[-1]
                 latest_ma5 = ma5.iloc[-1]
 
-                diff_pct = ((latest_close - latest_ma5) / latest_ma5) * 100
-                
                 if latest_close < latest_ma5:
                     status = "⚠️ 跌破MA5"
                     alerts_count += 1
@@ -236,3 +204,4 @@ def run_warrant_radar():
 
 if __name__ == "__main__":
     run_warrant_radar()
+
