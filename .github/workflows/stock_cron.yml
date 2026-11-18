@@ -23,8 +23,5 @@ jobs:
           pip install yfinance pandas requests
 
       - name: Run script
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID}}
-        run: |
-          python stock.py
+     
+        run: python stock.py
