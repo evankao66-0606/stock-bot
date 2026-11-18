@@ -15,8 +15,8 @@ MA_PERIOD = 20
 MIN_VOL = 2000  # 5日均量 > 2000張
 
 # 從 GitHub Secrets 讀取 Telegram 憑證
-TELEGRAM_BOT_TOKEN = os.environ.get("9156071043:AAEYKJJIA_BCc053CiKEm9wD3USTx3YiAUI")
-CHAT_ID = os.environ.get("8302884631")
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # 1. 候選掃描清單
 candidate_stocks = [
