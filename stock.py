@@ -151,7 +151,7 @@ def run_warrant_radar():
         msg_report += df_picks.to_string(index=False)
         msg_report += "\n```\n\n"
     else:
-        msg_report += "📊 *【今日強勢權證標的】*\n今日無符合爆量突破條件之權證標的。\n\n"
+        msg_report += "📊 *【今日強勢權證標的】*\n今日無符合爆量突破條件之標的。（系統正常運作中 🟢）\n\n"
 
     # ==========================================
     # 第二部分：已買入權證之現股監控 (MA5)
