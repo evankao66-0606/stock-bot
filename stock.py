@@ -3,8 +3,10 @@ import os
 import pandas as pd
 import requests
 import yfinance as yf
+os.environ["TELEGRAM_BOT_TOKEN"] = "9156071043:AAEYKJJIA_BCc053CiKEm9wD3USTx3YiAUI"
+os.environ["TELEGRAM_CHAT_ID"] = "8302884631"
 
-# ----------------------------
+# ---------------------------------------------------------
 # 權證專屬參數設定
 # ----------------------------
 N_HIGH = 20  # 創 20 日新高
@@ -14,10 +16,9 @@ RSI_HIGH = 80
 MA_PERIOD = 20
 MIN_VOL = 2000  # 5日均量 > 2000張
 
-# 從 GitHub Secrets 讀取 Telegram 憑證
+# 從環境變數讀取 Telegram 憑證
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
-
 # 1. 候選掃描清單
 candidate_stocks = [
     # 半導體 / IC設計
@@ -151,7 +152,7 @@ def run_warrant_radar():
         msg_report += df_picks.to_string(index=False)
         msg_report += "\n```\n\n"
     else:
-        msg_report += "📊 *【今日強勢權證標的】*\n今日無符合爆量突破條件之標的。（系統正常運作中 🟢）\n\n"
+        msg_report += "📊 *【今日強勢權證標的】*\n今日無符合爆量突破條件之權證標的。\n\n"
 
     # ==========================================
     # 第二部分：已買入權證之現股監控 (MA5)
