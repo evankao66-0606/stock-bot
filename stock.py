@@ -50,23 +50,64 @@ candidate_stocks = [
 # 2. 已買入權證之現股監控清單（已排除 3357.TW）
 my_portfolio = ["4919.TW", "3042.TW", "00685L.TW"]
 
-
 def get_warrant_eligible_stocks():
-    """從證交所開放資料取得目前可發行權證的上市股票代碼集合"""
+    """從證交所與櫃買中心開放資料取得目前可發行權證的上市櫃股票代碼集合"""
+    eligible = set()
+
+    # 1. 上市可發行權證標的（.TW）
     try:
-        url = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_1"
-        res = requests.get(url, timeout=10)
-        if res.status_code == 200:
-            data = res.json()
-            eligible = {
-                f"{item['標的代號'].strip()}.TW" for item in data if "標的代號" in item
-            }
-            if len(eligible) > 0:
-                print(f"✅ 成功取得證交所權證標的清單，共 {len(eligible)} 檔")
-                return eligible
+        url_twse = "https://openapi.twse.com.tw/v1/opendata/t187ap46_L_1"
+        res_twse = requests.get(url_twse, timeout=10)
+        if res_twse.status_code == 200:
+            data_twse = res_twse.json()
+            for item in data_twse:
+                code = str(item.get("標的代號", "")).strip()
+                if code:
+                    eligible.add(f"{code}.TW")
+            print(f"✅ 取得上市權證標的 {len(eligible)} 檔")
     except Exception as e:
-        print(f"⚠️ 取得證交所權證清單失敗，改用內建清單過濾: {e}")
-    return None
+        print(f"⚠️ 取得上市權證清單失敗: {e}")
+
+    # 2. 上櫃可發行權證標的（.TWO）
+    tpex_count = 0
+    tpex_urls = [
+        "https://www.tpex.org.tw/openapi/v1/tpex_warrant_target",
+        "https://www.tpex.org.tw/web/stock/warrant/warrant_target/r_warrant_target_result.php?l=zh-tw&o=json",
+    ]
+    for url_tpex in tpex_urls:
+        try:
+            res_tpex = requests.get(url_tpex, timeout=10)
+            if res_tpex.status_code == 200:
+                payload = res_tpex.json()
+                rows = payload if isinstance(payload, list) else payload.get("aaData", [])
+                for row in rows:
+                    if isinstance(row, dict):
+                        code = str(
+                            row.get("UnderlyingStockCode")
+                            or row.get("標的代號")
+                            or row.get("StockCode")
+                            or ""
+                        ).strip()
+                    elif isinstance(row, (list, tuple)) and len(row) > 0:
+                        code = str(row[0]).strip()
+                    else:
+                        code = ""
+                    if code:
+                        eligible.add(f"{code}.TWO")
+                        tpex_count += 1
+                if tpex_count > 0:
+                    print(f"✅ 取得上櫃權證標的 {tpex_count} 檔")
+                    break
+        except Exception as e:
+            print(f"⚠️ 嘗試上櫃權證清單端點失敗 ({url_tpex}): {e}")
+
+    if len(eligible) > 0:
+        print(f"✅ 合計可發行權證標的共 {len(eligible)} 檔")
+        return eligible
+
+    print("⚠️ 無法取得上市櫃權證清單，改以候選清單全數掃描")
+    return set(candidate_stocks)
+
 
 
 def send_telegram_message(message):
