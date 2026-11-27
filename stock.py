@@ -61,7 +61,7 @@ candidate_stocks = [
 ]
 
 # 2. 已買入權證之現股監控清單（已排除 3357.TW）
-my_portfolio = ["4919.TW", "3042.TW", "00685L.TW"]
+my_portfolio = ["4919.TW", "3042.TW", "00685L.TW","2327.TW","1409.TW","3037.TW","2308.TW","2454.TW","8039.TW","3163.TW","3008.TW"]
 
 def get_warrant_eligible_stocks():
     """從證交所與櫃買中心開放資料取得目前可發行權證的上市櫃股票代碼集合"""
