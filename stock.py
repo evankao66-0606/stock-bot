@@ -267,11 +267,10 @@ def run_warrant_radar():
                 
 all_stocks = get_all_tw_stocks()
 top20_strong = scan_top20_strong_stocks(all_stocks, top_n=20)
-    if top20_strong:
-        msg_ eport += "\n🚀 *【突破／強勢股前 20 檔】*\n" + "\n".join(top20_strong)
-    else:
-        msg_report += "\n🚀 *【突破／強勢股前 20 檔】*\n今日無符合條件之突破或強勢標的。\n"
-send_telegram_message(msg_report)
+if top20_strong:
+    msg_report += "\n🚀 *【突破／強勢股前 20 檔】*\n" + "\n".join(top20_strong)
+else:
+    msg_report += "\n🚀 *【突破／強勢股前 20 檔】*\n今日無符合條件之突破或強勢標的。\n"
 
 
 if __name__ == "__main__":
