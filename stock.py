@@ -282,17 +282,17 @@ def main() -> None:
     top20_strong = scan_top20_strong_stocks(all_stocks, top_n=20)
 
     portfolio_section = "🛡️【庫存 5 日線防守監控】\n" + (
-        "\n".join(portfolio_lines) if portfolio_lines else "（目前無設定庫存標的）"
-    )
+    "\n".join(portfolio_lines) if portfolio_lines else "（目前無設定庫存標的）"
+)
 
-    if top20_strong:
-        strong_section = "🚀【突破／強勢股前 20 檔】\n" + "\n".join(top20_strong)
-    else:
-        strong_section = "🚀【突破／強勢股前 20 檔】\n今日無符合條件之突破或強勢標的。"
+if top20_strong:
+    strong_section = "🚀【突破／強勢股前 20 檔】\n" + "\n".join(top20_strong)
+else:
+    strong_section = "🚀【突破／強勢股前 20 檔】\n今日無符合條件之突破或強勢標的。"
 
-    report = f"{portfolio_section}\n\n{strong_section}"
-    print(f"成功取得上市櫃股票數：{len(all_stocks)} 檔")
-    print(report)
-    send_telegram_message(report)
+report = f"{portfolio_section}\n\n{strong_section}"
+print(f"成功取得上市櫃股票數：{len(all_stocks)} 檔")
+print(report)
+send_telegram_message(report
 if __name__ == "__main__":
     main()
