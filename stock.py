@@ -264,7 +264,13 @@ def run_warrant_radar():
                 msg_report += f"\n⚠️ *注意：共有 {alerts_count} 檔持倉跌破 5 日線，請留意權證出場時機！*"
             else:
                 msg_report += "\n🎯 *所有持倉皆安全站穩 5 日線之上。*"
-
+                
+all_stocks = get_all_tw_stocks()
+    top20_strong = scan_top20_strong_stocks(all_stocks, top_n=20)
+    if top20_strong:
+        msg_report += "\n🚀 *【突破／強勢股前 20 檔】*\n" + "\n".join(top20_strong)
+    else:
+        msg_report += "\n🚀 *【突破／強勢股前 20 檔】*\n今日無符合條件之突破或強勢標的。\n"
     send_telegram_message(msg_report)
 
 
