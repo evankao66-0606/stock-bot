@@ -427,6 +427,8 @@ if top20_strong:
     msg_report += "\n\n🚀 *突破／強勢股前 20 檔*\n" + "\n".join(top20_strong)
 else:
     msg_report += "\n\n🚀 *突破／強勢股前 20 檔*\n今日無符合條件之突破或強勢標的。"
+
+send_telegram_message(msg_report)
     send_telegram_message(msg_report)
 
 
