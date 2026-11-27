@@ -307,7 +307,6 @@ def run_warrant_radar():
                 if any(w in name for w in ["購", "售", "牛", "熊", "展延"]):
                     continue
                 stock_map[f"{code}{suffix}"] = name
-
     # 1. 上市股票清單（TWSE OpenAPI）
     twse_endpoints = [
         "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",
@@ -421,7 +420,13 @@ def scan_top20_strong_stocks(
 
     candidates.sort(key=lambda x: x[0], reverse=True)
     return [item[1] for item in candidates[:top_n]]
+all_stocks = get_all_tw_stocks()
+top20_strong = scan_top20_strong_stocks(all_stocks, top_n=20)
 
+if top20_strong:
+    msg_report += "\n\n🚀 *突破／強勢股前 20 檔*\n" + "\n".join(top20_strong)
+else:
+    msg_report += "\n\n🚀 *突破／強勢股前 20 檔*\n今日無符合條件之突破或強勢標的。"
     send_telegram_message(msg_report)
 
 
