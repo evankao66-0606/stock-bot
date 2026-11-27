@@ -293,6 +293,6 @@ else:
 report = f"{portfolio_section}\n\n{strong_section}"
 print(f"成功取得上市櫃股票數：{len(all_stocks)} 檔")
 print(report)
-send_telegram_message(report
+send_telegram_message(report)
 if __name__ == "__main__":
     main()
