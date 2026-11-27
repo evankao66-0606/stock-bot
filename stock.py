@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import re
 import requests
@@ -293,7 +294,5 @@ def main() -> None:
     print(f"成功取得上市櫃股票數：{len(all_stocks)} 檔")
     print(report)
     send_telegram_message(report)
-
-
 if __name__ == "__main__":
     main()
